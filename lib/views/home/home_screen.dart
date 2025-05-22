@@ -120,22 +120,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildVehicleImage(Vehicle vehicle) {
   if (vehicle.imagePath != null) {
-    try {
+    if (vehicle.imagePath!.startsWith('assets/')) {
+      // Imagen desde assets
       return Image.asset(
         vehicle.imagePath!,
         width: 80,
         height: 80,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          print("Error cargando imagen: ${vehicle.imagePath}");
           return const Icon(Icons.error);
         },
       );
-    } catch (e) {
-      print("Excepción al cargar imagen: $e");
-      return const Icon(Icons.car_repair);
+    } else {
+      // Imagen desde archivo local (galería)
+      return Image.file(
+        File(vehicle.imagePath!),
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.error);
+        },
+      );
     }
   }
+
   return const Icon(Icons.car_repair);
 }
 
